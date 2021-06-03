@@ -1,0 +1,34 @@
+<!doctype html>
+<head>
+</head>
+<body>
+<script>
+    async function test(params) {
+        console.group(params);
+        const cw = await new Promise((resolve) => {
+            const f = document.createElement("iframe");
+            Object.assign(f, params);
+            f.onload = () => resolve(f.contentWindow);
+            document.body.appendChild(f);
+        });
+
+        try {
+            console.log([cw])
+            console.log(cw);
+        } catch (e) {
+            console.error(e.message);
+        }
+        console.groupEnd();
+        console.log("\n\n");
+    }
+
+    (async () => {
+        await test({src: "about:blank"});
+        await test({src: "https://example.com/"});
+        await test({src: "about:blank", sandbox: ""});
+        await test({srcdoc: "", sandbox: ""});
+        await test({src: "data:text/html;base64,"});
+    })();
+</script>
+</body>
+</html>
